@@ -28,3 +28,16 @@ class StockInfoObject(object):
         return "StockObject (symbol={} company_name={} quote={})".format(
             self.symbol, self.company_name, self.quote
         )
+
+
+class StockHistorySchema(ma.Schema):
+    class Meta:
+        ordered = True
+
+    date = ma.String(dump_only=True, attribute="call_date")
+    name = ma.String(dump_only=True)
+    symbol = ma.String(dump_only=True)
+    open = ma.Float(dump_only=True)
+    high = ma.Float(dump_only=True)
+    low = ma.Float(dump_only=True)
+    close = ma.Float(dump_only=True)
