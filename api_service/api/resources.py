@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-from api_service.api.schemas import StockInfoSchema,StockQuerySchema,StockInfoObject,StockHistorySchema
+from api_service.api.schemas import StockInfoSchema,StockQuerySchema,StockInfoObject,StockHistorySchema,StockStatsSchema
 from api_service.extensions import db, pwd_context
 from flask_jwt_extended import create_access_token
 from api_service.models import User,StockCall
@@ -8,7 +8,8 @@ from flask import abort, jsonify, request
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required
 from api_service.config import STOCK_URL
 from api_service.clients.stock import StockClient
-
+from api_service.auth.helpers import admin_required
+from sqlalchemy import desc, func
 
 class Login(Resource):    
     def post(self):
@@ -78,6 +79,17 @@ class Stats(Resource):
     """
     Allows admin users to see which are the most queried stocks.
     """
+    @admin_required()
     def get(self):
-        # TODO: Implement this method.
-        pass
+        top_symbols = db.session.execute(
+            db.select(StockCall.symbol, func.count(StockCall.symbol).label("count"))
+            .group_by(StockCall.symbol)
+            .order_by(desc("count"))
+            .limit(5)
+        ).all()
+
+        # marshmallow is being funny, so we're reordering once again
+        schema = StockStatsSchema(many=True)
+        return sorted(
+            schema.dump(top_symbols), key=lambda x: x["times_requested"], reverse=True
+        )
