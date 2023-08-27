@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-from api_service.api.schemas import StockInfoSchema,StockQuerySchema,StockInfoObject
+from api_service.api.schemas import StockInfoSchema,StockQuerySchema,StockInfoObject,StockHistorySchema
 from api_service.extensions import db, pwd_context
 from flask_jwt_extended import create_access_token
 from api_service.models import User,StockCall
@@ -63,9 +63,15 @@ class History(Resource):
     """
     Returns queries made by current user.
     """
+    @jwt_required()
     def get(self):
-        # TODO: Implement this method.
-        pass
+        user_id = get_jwt()["user_id"]
+
+        calls = db.session.execute(
+            db.select(StockCall).filter_by(user_id=user_id)
+        ).scalars()
+        schema = StockHistorySchema(many=True)
+        return sorted(schema.dump(calls), key=lambda x: x["date"], reverse=True)
 
 
 class Stats(Resource):
