@@ -13,15 +13,22 @@ def cli():
 @cli.command("init")
 @with_appcontext
 def init():
-    """Create a new admin user"""
+    """Create a new admin user
+    Uage: write in the command line python manage.py init"""
     from api_service.extensions import db
-    from api_service.models import User
+    from api_service.models import User,StockCall
+    from api_service.wsgi import create_app
+
+    app = create_app()
 
     click.echo("create admin user")
-    user = User(username="admin", email="admin@mail.com", password="admin", active=True, role='ADMIN')
-    db.session.add(user)
-    user = User(username="johndoe", email="johndoe@mail.com", password="john", active=True, role='USER')
-    db.session.commit()
+    with app.app_context():
+        db.create_all()
+        user = User(username="admin", email="admin@mail.com", password="admin", active=True, role='ADMIN')
+        db.session.add(user)
+        user = User(username="johndoe", email="johndoe@mail.com", password="john", active=True, role='USER')
+        db.session.add(user)
+        db.session.commit()
     click.echo("created users.")
 
 
