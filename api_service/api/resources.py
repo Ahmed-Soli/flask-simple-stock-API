@@ -1,10 +1,13 @@
 from flask import request
 from flask_restful import Resource
-from api_service.api.schemas import StockInfoSchema
+from api_service.api.schemas import StockInfoSchema,StockQuerySchema,StockInfoObject
 from api_service.extensions import db, pwd_context
 from flask_jwt_extended import create_access_token
-from api_service.models import User
+from api_service.models import User,StockCall
 from flask import abort, jsonify, request
+from flask_jwt_extended import create_access_token, get_jwt, jwt_required
+from api_service.config import STOCK_URL
+from api_service.clients.stock import StockClient
 
 
 class Login(Resource):    
@@ -30,12 +33,30 @@ class StockQuery(Resource):
     """
     Endpoint to allow users to query stocks
     """
+    stock_client = StockClient(STOCK_URL)
+
+    @jwt_required()
     def get(self):
-        # TODO: Call the stock service, save the response, and return the response to the user in
-        # the format dictated by the StockInfoSchema.
-        data_from_service = None
+        query_schema = StockQuerySchema()
+        errors = query_schema.validate(request.args)
+        if errors:
+            abort(400, str(errors))
+
+        stock_data = self.stock_client.get_stock(request.args["q"])
+        if not stock_data:
+            abort(404, "Stock not found")
+
+        stock_info = StockInfoObject(stock_data)
+        if not stock_info.quote:
+            abort(404, "Stock quote not available")
+
+        stock_call = StockCall(stock_data)
+        stock_call.user_id = get_jwt()["user_id"]
+        db.session.add(stock_call)
+        db.session.commit()
+
         schema = StockInfoSchema()
-        return schema.dump(data_from_service)
+        return schema.dump(stock_info)
 
 
 class History(Resource):
