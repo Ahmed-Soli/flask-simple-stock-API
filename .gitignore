@@ -1,5 +1,6 @@
 ### Python template
 # Byte-compiled / optimized / DLL files
+/virtualenv/
 __pycache__/
 *.py[cod]
 *$py.class
