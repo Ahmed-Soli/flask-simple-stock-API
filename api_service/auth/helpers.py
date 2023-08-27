@@ -1,13 +1,20 @@
-# encoding: utf-8
+from functools import wraps
 
-from flask_httpauth import HTTPBasicAuth
-
-from api_service.models import User
-
-auth = HTTPBasicAuth()
+from flask import abort
+from flask_jwt_extended import get_jwt, verify_jwt_in_request
 
 
-@auth.verify_password
-def verify(username, password):
-    # TODO: Use the data in the database to validate the user credentials.
-    return False
+def admin_required():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            verify_jwt_in_request()
+            claims = get_jwt()
+            if claims["role"] == "ADMIN":
+                return fn(*args, **kwargs)
+            else:
+                return abort(403, "Unauthorized")
+
+        return decorator
+
+    return wrapper
