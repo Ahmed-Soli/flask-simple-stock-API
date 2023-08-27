@@ -1,10 +1,10 @@
 # encoding: utf-8
 
-from flask import request
+from flask import request,abort
 from flask_restful import Resource
 
-from stock_service.api.schemas import StockSchema
-
+from stock_service.api.schemas import StockSchema,StockQuerySchema
+from stock_service.clients.stooq import StooqClient
 
 class StockResource(Resource):
     """
@@ -12,10 +12,17 @@ class StockResource(Resource):
     them to our main API service. Currently we only get the data from a single external source:
     the stooq API.
     """
+    stooq_client = StooqClient()
 
     def get(self):
-        # TODO: Implement the call to the stooq service here. The stock code to query the API
-        # should come in a query parameter.
-        stock_data_obj = None
+        query_schema = StockQuerySchema()
+        errors = query_schema.validate(request.args)
+        if errors:
+            abort(400, str(errors))
+
+        stock_data = self.stooq_client.get_stock(request.args["q"])
+        if not stock_data:
+            abort(404, "Stock not found")
+
         schema = StockSchema()
-        return schema.dump(stock_data_obj)
+        return schema.dump(stock_data)
