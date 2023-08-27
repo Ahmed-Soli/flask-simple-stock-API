@@ -13,7 +13,7 @@ def create_app(testing=False):
 
     if testing is True:
         app.config["TESTING"] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////api_service.sqlite3"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///api_service.sqlite3"
     configure_extensions(app)
     register_blueprints(app)
 
