@@ -9,7 +9,7 @@ from api_service.api import resources
 blueprint = Blueprint("api", __name__, url_prefix="/api/v1")
 api = Api(blueprint)
 
-
+api.add_resource(resources.Login, "/login", endpoint="login")
 api.add_resource(resources.StockQuery, "/stock", endpoint="stock")
 api.add_resource(resources.History, "/users/history", endpoint="users-history")
 api.add_resource(resources.Stats, "/stats", endpoint="stats")
