@@ -13,3 +13,7 @@ class StockSchema(marsh.Schema):
     high = marsh.Float(dump_only=True)
     low = marsh.Float(dump_only=True)
     close = marsh.Float(dump_only=True)
+
+
+class StockQuerySchema(marsh.Schema):
+    q = marsh.String(required=True)
