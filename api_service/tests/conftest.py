@@ -1,48 +1,54 @@
 # encoding: utf-8
 
+import json
 import pytest
 from dotenv import load_dotenv
-
-from api_service.models import User
 from api_service.app import create_app
+from api_service.clients.stock import StockClient
 from api_service.extensions import db as _db
-from pytest_factoryboy import register
-from .factories import UserFactory
 
 
-register(UserFactory)
 
-
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def app():
+    
     load_dotenv(".testenv")
-    app = create_app(testing=True)
-    return app
-
-
-@pytest.fixture
-def db(app):
-    _db.app = app
-
+    app = create_app()
     with app.app_context():
         _db.create_all()
+    yield app
 
-    yield _db
 
-    _db.session.close()
-    _db.drop_all()
+@pytest.fixture()
+def db():  
+    return _db
+
+@pytest.fixture
+def test_client(app):
+    return app.test_client()
 
 
 @pytest.fixture
-def admin_user(db):
-    user = User(
-        username='admin',
-        email='admin@admin.com',
-        password='admin',
-        role='ADMIN'
+def stock_client():
+    return StockClient("https://example.com/")
+
+
+def get_login_token(test_client, username, password):
+    login_data = {"username": username, "password": password}
+    response = test_client.post(
+        "/api/v1/login",
+        data=json.dumps(login_data),
+        headers={"Content-Type": "application/json"},
     )
+    json_data = response.get_json()
+    return json_data["token"]
 
-    db.session.add(user)
-    db.session.commit()
 
-    return user
+@pytest.fixture
+def admin_token(test_client):
+    return get_login_token(test_client, "admin", "admin")
+
+
+@pytest.fixture
+def user_token(test_client):
+    return get_login_token(test_client, "johndoe", "john")
