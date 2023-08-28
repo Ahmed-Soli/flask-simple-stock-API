@@ -1,0 +1,23 @@
+version: '3'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./api_service/Dockerfile
+    ports:
+      - 5000:5000
+    env_file: api_service/.flaskenv
+    environment:
+      - STOCK_URL=http://stock:5001/
+    volumes:
+      - ./api_service:/app/api_service
+
+  stock:
+    build:
+      context: .
+      dockerfile: ./stock_service/Dockerfile
+    ports:
+      - 5001:5001
+    env_file: stock_service/.flaskenv
+    volumes:
+      - ./stock_service:/app/stock_service
