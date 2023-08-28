@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-service
+  labels:
+    app: api-service
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      app: api-service
+  template:
+    metadata:
+      labels:
+        app: api-service
+    spec:
+      containers:
+      - name: api-service
+        image: {{ .Values.app.container.image }}
+        ports:
+        - containerPort: {{ .Values.app.container.port }}
+        resources:
+          limits:
+            memory: 512Mi
+            cpu: "1"
+          requests:
+            memory: 256Mi
+            cpu: "0.2"

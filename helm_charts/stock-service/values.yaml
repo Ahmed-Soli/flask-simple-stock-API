@@ -1,0 +1,15 @@
+app:
+  replicas: 2
+  container:
+    port: "5001"
+    image: ahmedsoliman202/falsk-app-stock-service
+  service:
+    target_port: 5001
+    node_port: 30009
+
+
+hpa:
+  enable: false
+  minReplicas: 4
+  maxReplicas: 10
+  percentage: 50
