@@ -5,6 +5,7 @@ from flask_restful import Resource
 
 from stock_service.api.schemas import StockSchema,StockQuerySchema
 from stock_service.clients.stooq import StooqClient
+from stock_service.config import STOOQ_URL
 
 class StockResource(Resource):
     """
@@ -12,7 +13,7 @@ class StockResource(Resource):
     them to our main API service. Currently we only get the data from a single external source:
     the stooq API.
     """
-    stooq_client = StooqClient()
+    stooq_client = StooqClient(STOOQ_URL)
 
     def get(self):
         query_schema = StockQuerySchema()
