@@ -2,12 +2,23 @@
     <img src="https://raw.githubusercontent.com/Jobsity/ReactChallenge/main/src/assets/jobsity_logo_small.png"/>
 </div>
 
-# Flask Challenge
+# Table of content
+1. [Flask Challenge](#req)
+    - [Description](#desc)    
+    - [Assignment](#Asmnt)
+2. [Minimum requirements](#min_req)
+    - [API service](#api_svc)    
+    - [Stock service](#stock_svc)    
+3. [Architecture](#arct)
+4. [Bonuses](#bons)
+5. [How to run the project](#how_to_run)
 
-## Description
+## Flask Challenge <a name="req"></a>
+
+## Description <a name="desc"></a>
 This project is designed to test your knowledge of back-end web technologies, specifically in the Flask framework, Rest APIs, and decoupled services (microservices).
 
-## Assignment
+## Assignment <a name="Asmnt"></a>
 The goal of this exercise is to create a simple API using Flask to allow users to query [stock quotes](https://www.investopedia.com/terms/s/stockquote.asp).
 
 The project consists of two separate services:
@@ -16,8 +27,8 @@ The project consists of two separate services:
 
 For simplicity, both services will share the same dependencies (requirements.txt) and can be run from the same virtualenv, but remember that they are still separate processes.
 
-## Minimum requirements
-### API service
+## Minimum requirements <a name="min_req"></a>
+### API service <a name="api_svc"></a>
 * Endpoints in the API service should require authentication (no anonymous requests should be allowed). Each request should be authenticated via Basic Authentication.
 You have to implement the code to check the user credentials are correct and put the right decorators around resource methods (check the auth.helpers module).
 * When a user makes a request to get a stock quote (calls the stock endpoint in the api service), if a stock is found, it should be saved in the database associated to the user making the request.
@@ -54,13 +65,13 @@ You have to implement the code to check the user credentials are correct and put
   ```
 * All endpoint responses should be in JSON format.
 
-### Stock service
+### Stock service <a name="stock_svc"></a>
 * Assume this is an internal service, so requests to endpoints in this service don't need to be authenticated.
 * When a stock request is received, this service should query an external API to get the stock information. For this challege, use this API: `https://stooq.com/q/l/?s={stock_code}&f=sd2t2ohlcvn&h&e=csv`.
 * Note that `{stock_code}` above is a parameter that should be replaced with the requested stock code.
 * You can see a list of available stock codes here: https://stooq.com/t/?i=518
 
-## Architecture
+## Architecture <a name="arct"></a>
 ![Architecture Diagram](diagram.svg)
 1. A user makes a request asking for Apple's current Stock quote: `GET /stock?q=aapl.us`
 2. The API service calls the stock service to retrieve the requested stock information
@@ -68,17 +79,26 @@ You have to implement the code to check the user credentials are correct and put
 4. The API service saves the response from the stock service in the database.
 5. The data is formatted and returned to the user.
 
-## Bonuses
+## Bonuses <a name="bons"></a>
 The following features are optional to implement, but if you do, you'll be ranked higher in our evaluation process.
 * Add unit tests for the bot and the main app.
 * Connect the two services via RabbitMQ instead of doing http calls.
 * Use JWT instead of basic authentication for endpoints.
 
-## How to run the project
-* Create a virtualenv: `python -m venv virtualenv` and activate it `. virtualenv/bin/activate`.
-* Install dependencies: `pip install -r requirements.txt`
-* Start the api service: `cd api_service ; flask db migrate; flask db upgrade ; flask run`
-* Start the stock service: `cd stock_service ; flask run`
+## How to run the project <a name="how_to_run"></a>
+- Create virual environment and install dependencies
+  * Create a virtualenv: `python -m venv virtualenv`
+  * Activate the virual environment :
+    - On Unix based OS `. virtualenv/bin/activate` or `source virtualenv/bin/activate`
+    - On Windwos based OS `. virtualenv/Scripts/activate` or `source virtualenv/Scripts/activate`
+  * Install dependencies: `pip install -r requirements.txt`
+- Start the api service
+  * Change working directory to api service : `cd api_service`
+  * Create Database and it's tables and intial users : `python manage.py init`
+  * Start the api service: `flask run`
+- Start the api service
+  * Change working directory to stock service : `cd stock_service`
+  * Start the stock service: `flask run`
 
 __Important:__ If your implementation requires different steps to start the services
 (like starting a rabbitMQ consumer), document them here!
