@@ -17,6 +17,7 @@
 8. [Phase 4 ( Deploying the api-service and stock-service apps with Kubernetes)](#Kubernetes)
 9. [Phase 5 ( Deploying the api-service and stock-service apps with Helm Charts)](#helm)
 10. [Phase 6 ( Building CD of the api-service and stock-service apps Using ArgoCD and Helm Charts)](#argocd)
+11. [Phase 7 ( How to test the apps )](#remote)
 
 ## Flask Challenge <a name="req"></a>
 
@@ -262,3 +263,20 @@ The following features are optional to implement, but if you do, you'll be ranke
 - Side Note:
     - If you are using windows, make sure to rename the downloaded argocd cli from `argocd-windows-amd64.exe` to `argocd.exe`
     - Aslo make sure to add `argocd.exe` location to windows environment variable `path`
+
+
+## Phase 7 ( How to test the api-service and stock-service apps )<a name="remote"></a>
+
+- I'm hosting the containerized api-service and stock-service apps on an AWS EC2 instatnce.
+- Api-service app endpoints can be accessed through these URLs:
+    ```bash
+    http://3.144.209.223:5000/api/v1/login
+    http://3.144.209.223:5000/api/v1/stock?q=aapl.us
+    http://3.144.209.223:5000/api/v1/users/history
+    http://3.144.209.223:5000/api/v1/stats
+    ```
+
+- Stock-service app endpoint can be accessed through this URL:
+    ```bash
+    http://3.144.209.223:5001/api/v1//stock?q=aapl.us
+    ```
