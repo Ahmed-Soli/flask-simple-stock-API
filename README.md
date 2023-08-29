@@ -18,6 +18,7 @@
 9. [Phase 5 ( Deploying the api-service and stock-service apps with Helm Charts)](#helm)
 10. [Phase 6 ( Building CD of the api-service and stock-service apps Using ArgoCD and Helm Charts)](#argocd)
 11. [Phase 7 ( How to test the apps )](#remote)
+12. [Time for some Screen Shots](#screen_shots)
 
 ## Flask Challenge <a name="req"></a>
 
@@ -163,8 +164,8 @@ The following features are optional to implement, but if you do, you'll be ranke
 -  We can deploy the api-service and stock-service apps kubernetes manifest using this command
 
     ```bash
-     k create -f ./kubernetes/api-service-deployment.yaml
-     k create -f ./kubernetes/stock-service-deployment.yaml
+     kubectl create -f ./kubernetes/api-service-deployment.yaml
+     kubectl create -f ./kubernetes/stock-service-deployment.yaml
     ````
     - To see if the pod was created successfully and running using this command to list all the pods in a cluster node
         ```bash
@@ -280,3 +281,31 @@ The following features are optional to implement, but if you do, you'll be ranke
     ```bash
     http://3.144.209.223:5001/api/v1//stock?q=aapl.us
     ```
+
+## Time for some Screen Shots <a name="screen_shots"></a>
+- Running the api-service app locally and testing /login GET endpoint with admin user credintials
+![1-admin-login](screen_shots/001-post-man.png)
+- Running the api-service app locally and /login GET endpoint with normal user credintials
+![2-normal-login](screen_shots/002-post-man.png)
+- Running the api-service app locally and /login GET endpoint with wrong credintials
+![3-wrong-login](screen_shots/003-post-man.png)
+- Running the api-service app locally and testing stock retrival /stock?q=aapl.us GET endpoint
+![4-stock_retrive](screen_shots/004-post-man.png)
+- Running the api-service app locally and testing users history /users/history GET endpoint
+![5-users-history](screen_shots/005-post-man.png)
+- Running the api-service app locally and testing admin user accessing stats /stats GET endpoint
+![6-admin-stats](screen_shots/006-post-man.png)
+- Running the api-service app locally and testing normal user accessing stats /stats GET endpoint
+![7-normal-stats](screen_shots/007-post-man.png)
+- Running the stock-service app locally and testing stock retrival /stock?q=aapl.us GET endpoint
+![8-stock_retrive](screen_shots/008-post-man.png)
+- Building a Docker image and Running api-service container
+![9-docker_build_image.png](screen_shots/Docker-1.png)
+- Building a Docker image and Running api-service container
+![10-docker_build_image.png](screen_shots/Docker-2.png)
+- Docker image repo on Dockerhub
+![11-docker_image_on_dockerhub](screen_shots/Docker-3.png)
+- Running Jenkins stages to build and push the docker image to Dockerhub
+![12-Jenkins_stage_view](screen_shots/Jenkins-1.png)
+- Jenkins successfully built and pushed the docker image to Dockerhub
+![13-Jenkins_output](screen_shots/Jenkins-2.png)
