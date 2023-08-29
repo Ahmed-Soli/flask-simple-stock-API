@@ -213,9 +213,10 @@ The following features are optional to implement, but if you do, you'll be ranke
 
 ## Phase 6 ( building CD of the api-service and stock-service apps Using ArgoCD and Helm Charts)<a name="argocd"></a>
 
-- First thing to do before installing Argocd is to create a kubernete namespace using this command 
+- First thing to do before installing Argocd is to create a kubernete namespace using these commands 
     ```bash
     kubectl create namespace argocd
+    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
     ```
 - Make sure to have ArgoCD installed from [official docs](https://argo-cd.readthedocs.io/en/stable/getting_started/).
 
@@ -301,11 +302,15 @@ The following features are optional to implement, but if you do, you'll be ranke
 ![8-stock_retrive](screen_shots/008-post-man.png)
 - Building a Docker image and Running api-service container
 ![9-docker_build_image.png](screen_shots/Docker-1.png)
-- Building a Docker image and Running api-service container
+- Building a Docker image and Running stock-service container
 ![10-docker_build_image.png](screen_shots/Docker-2.png)
-- Docker image repo on Dockerhub
+- Docker images repo on Dockerhub after getting pushed by Jenkins
 ![11-docker_image_on_dockerhub](screen_shots/Docker-3.png)
+- Deploying api-service app on kubernetes using minikube cluster
+![12-minikube_app_deployment](screen_shots/kubernetes-api-service.png)
+- Deploying stock-service app on kubernetes using minikube cluster
+![13-minikube_app_deployment](screen_shots/kubernetes-stock-service.png)
 - Running Jenkins stages to build and push the docker image to Dockerhub
-![12-Jenkins_stage_view](screen_shots/Jenkins-1.png)
+![14-Jenkins_stage_view](screen_shots/Jenkins-1.png)
 - Jenkins successfully built and pushed the docker image to Dockerhub
-![13-Jenkins_output](screen_shots/Jenkins-2.png)
+![15-Jenkins_output](screen_shots/Jenkins-2.png)
