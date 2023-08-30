@@ -2,6 +2,16 @@ pipeline {
     agent any
     
     stages{
+        stage("Clone Git Repository") {
+            steps {
+                git(
+                    url: "https://github.com/Ahmed-Soli/helm_chart_flask-api-app.git",
+                    branch: "master",
+                    changelog: true,
+                    poll: true
+                )
+            }
+        }
         stage('Build api-service Docker image'){
             steps{
                 script{
